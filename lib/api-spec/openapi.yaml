@@ -1,0 +1,801 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: SupplyPilot AI - Agentic Decision Intelligence Platform for Supply Chain
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: scenarios
+    description: Business scenario management and execution
+  - name: recommendations
+    description: Recommendation approval and feedback
+  - name: memory
+    description: Agent memory and historical decisions
+  - name: dashboard
+    description: Dashboard statistics
+  - name: agents
+    description: Agent registry and status
+  - name: knowledge
+    description: Knowledge base and RAG retrieval
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /scenarios:
+    get:
+      operationId: listScenarios
+      tags: [scenarios]
+      summary: List available predefined scenarios
+      responses:
+        "200":
+          description: List of scenarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScenarioTemplate"
+
+  /scenarios/runs:
+    get:
+      operationId: listScenarioRuns
+      tags: [scenarios]
+      summary: List all past scenario runs
+      responses:
+        "200":
+          description: List of runs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScenarioRunSummary"
+    post:
+      operationId: runScenario
+      tags: [scenarios]
+      summary: Execute a scenario through the agent pipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunScenarioInput"
+      responses:
+        "201":
+          description: Scenario run result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioRun"
+
+  /scenarios/runs/{id}:
+    get:
+      operationId: getScenarioRun
+      tags: [scenarios]
+      summary: Get a specific scenario run with full details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Scenario run details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioRun"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /recommendations/{id}/approve:
+    post:
+      operationId: approveRecommendation
+      tags: [recommendations]
+      summary: Approve a recommendation and store in memory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApproveInput"
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionResult"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /recommendations/{id}/reject:
+    post:
+      operationId: rejectRecommendation
+      tags: [recommendations]
+      summary: Reject a recommendation and store feedback
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RejectInput"
+      responses:
+        "200":
+          description: Rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionResult"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /recommendations/{id}/modify:
+    post:
+      operationId: modifyRecommendation
+      tags: [recommendations]
+      summary: Modify a recommendation with user edits
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ModifyInput"
+      responses:
+        "200":
+          description: Modified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionResult"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /memory:
+    get:
+      operationId: listMemory
+      tags: [memory]
+      summary: Get all memory entries
+      responses:
+        "200":
+          description: Memory entries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemoryStore"
+    delete:
+      operationId: clearMemory
+      tags: [memory]
+      summary: Clear all memory
+      responses:
+        "204":
+          description: Cleared
+
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [dashboard]
+      summary: Get dashboard overview statistics
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /agents:
+    get:
+      operationId: listAgents
+      tags: [agents]
+      summary: List all available agents and their capabilities
+      responses:
+        "200":
+          description: Agent registry
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AgentDefinition"
+
+  /knowledge/sources:
+    get:
+      operationId: listKnowledgeSources
+      tags: [knowledge]
+      summary: List all knowledge base documents
+      responses:
+        "200":
+          description: Knowledge sources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KnowledgeSource"
+
+  /knowledge/search:
+    post:
+      operationId: searchKnowledge
+      tags: [knowledge]
+      summary: Search the knowledge base using TF-IDF retrieval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KnowledgeSearchInput"
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KnowledgeChunk"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    ScenarioTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        scenarioType:
+          type: string
+        inputSample:
+          type: string
+        agentsInvolved:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - description
+        - scenarioType
+        - inputSample
+        - agentsInvolved
+
+    RunScenarioInput:
+      type: object
+      properties:
+        scenarioType:
+          type: string
+        input:
+          type: string
+      required:
+        - scenarioType
+        - input
+
+    ScenarioRunSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        scenarioType:
+          type: string
+        scenarioName:
+          type: string
+        status:
+          type: string
+        recommendationCount:
+          type: integer
+        topConfidence:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - scenarioType
+        - scenarioName
+        - status
+        - recommendationCount
+        - topConfidence
+        - createdAt
+
+    ScenarioRun:
+      type: object
+      properties:
+        id:
+          type: string
+        scenarioType:
+          type: string
+        scenarioName:
+          type: string
+        input:
+          type: string
+        status:
+          type: string
+        plannerReasoning:
+          type: string
+        agentsInvoked:
+          type: array
+          items:
+            type: string
+        agentTimeline:
+          type: array
+          items:
+            $ref: "#/components/schemas/AgentExecution"
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recommendation"
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: ["string", "null"]
+          format: date-time
+      required:
+        - id
+        - scenarioType
+        - scenarioName
+        - input
+        - status
+        - plannerReasoning
+        - agentsInvoked
+        - agentTimeline
+        - recommendations
+        - createdAt
+
+    AgentExecution:
+      type: object
+      properties:
+        agentId:
+          type: string
+        agentName:
+          type: string
+        status:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: ["string", "null"]
+          format: date-time
+        durationMs:
+          type: integer
+        outputSummary:
+          type: string
+        insights:
+          type: array
+          items:
+            type: string
+      required:
+        - agentId
+        - agentName
+        - status
+        - startTime
+        - durationMs
+        - outputSummary
+        - insights
+
+    Recommendation:
+      type: object
+      properties:
+        id:
+          type: string
+        runId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+        confidenceScore:
+          type: number
+        businessImpact:
+          type: string
+        estimatedCost:
+          type: string
+        status:
+          type: string
+        evidence:
+          type: array
+          items:
+            $ref: "#/components/schemas/EvidenceItem"
+        reasoningTrace:
+          type: array
+          items:
+            type: string
+        confidenceBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConfidenceFactor"
+        businessRules:
+          type: array
+          items:
+            type: string
+        userFeedback:
+          type: ["string", "null"]
+        modifiedDescription:
+          type: ["string", "null"]
+        rank:
+          type: integer
+      required:
+        - id
+        - runId
+        - title
+        - description
+        - priority
+        - confidenceScore
+        - businessImpact
+        - estimatedCost
+        - status
+        - evidence
+        - reasoningTrace
+        - confidenceBreakdown
+        - businessRules
+        - rank
+
+    EvidenceItem:
+      type: object
+      properties:
+        source:
+          type: string
+        excerpt:
+          type: string
+        similarityScore:
+          type: number
+        type:
+          type: string
+      required:
+        - source
+        - excerpt
+        - similarityScore
+        - type
+
+    ConfidenceFactor:
+      type: object
+      properties:
+        factor:
+          type: string
+        score:
+          type: number
+        weight:
+          type: number
+        contribution:
+          type: number
+        description:
+          type: string
+      required:
+        - factor
+        - score
+        - weight
+        - contribution
+        - description
+
+    ApproveInput:
+      type: object
+      properties:
+        notes:
+          type: string
+
+    RejectInput:
+      type: object
+      properties:
+        feedback:
+          type: string
+        reason:
+          type: string
+      required:
+        - feedback
+
+    ModifyInput:
+      type: object
+      properties:
+        modifiedDescription:
+          type: string
+        notes:
+          type: string
+      required:
+        - modifiedDescription
+
+    ActionResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        recommendation:
+          $ref: "#/components/schemas/Recommendation"
+        memoryId:
+          type: ["string", "null"]
+      required:
+        - success
+        - recommendation
+
+    MemoryStore:
+      type: object
+      properties:
+        incidents:
+          type: array
+          items:
+            $ref: "#/components/schemas/MemoryEntry"
+        vendorPerformance:
+          type: array
+          items:
+            $ref: "#/components/schemas/VendorPerformanceRecord"
+        totalDecisions:
+          type: integer
+        approvalRate:
+          type: number
+      required:
+        - incidents
+        - vendorPerformance
+        - totalDecisions
+        - approvalRate
+
+    MemoryEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        scenarioType:
+          type: string
+        incidentSummary:
+          type: string
+        decision:
+          type: string
+        outcome:
+          type: string
+        feedback:
+          type: ["string", "null"]
+        confidenceAtDecision:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - scenarioType
+        - incidentSummary
+        - decision
+        - outcome
+        - confidenceAtDecision
+        - createdAt
+
+    VendorPerformanceRecord:
+      type: object
+      properties:
+        vendorId:
+          type: string
+        vendorName:
+          type: string
+        reliabilityScore:
+          type: number
+        totalIncidents:
+          type: integer
+        avgLeadTimeDays:
+          type: number
+        lastIncident:
+          type: ["string", "null"]
+          format: date-time
+      required:
+        - vendorId
+        - vendorName
+        - reliabilityScore
+        - totalIncidents
+        - avgLeadTimeDays
+
+    DashboardStats:
+      type: object
+      properties:
+        totalRuns:
+          type: integer
+        totalRecommendations:
+          type: integer
+        approvalRate:
+          type: number
+        avgConfidence:
+          type: number
+        recentRuns:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScenarioRunSummary"
+        agentStats:
+          type: array
+          items:
+            $ref: "#/components/schemas/AgentStat"
+        scenarioBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScenarioBreakdownItem"
+      required:
+        - totalRuns
+        - totalRecommendations
+        - approvalRate
+        - avgConfidence
+        - recentRuns
+        - agentStats
+        - scenarioBreakdown
+
+    AgentStat:
+      type: object
+      properties:
+        agentId:
+          type: string
+        agentName:
+          type: string
+        totalInvocations:
+          type: integer
+        avgDurationMs:
+          type: number
+        successRate:
+          type: number
+      required:
+        - agentId
+        - agentName
+        - totalInvocations
+        - avgDurationMs
+        - successRate
+
+    ScenarioBreakdownItem:
+      type: object
+      properties:
+        scenarioType:
+          type: string
+        count:
+          type: integer
+        avgConfidence:
+          type: number
+      required:
+        - scenarioType
+        - count
+        - avgConfidence
+
+    AgentDefinition:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+        dataSources:
+          type: array
+          items:
+            type: string
+        outputTypes:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - description
+        - capabilities
+        - dataSources
+        - outputTypes
+
+    KnowledgeSource:
+      type: object
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        title:
+          type: string
+        chunkCount:
+          type: integer
+        category:
+          type: string
+      required:
+        - id
+        - filename
+        - title
+        - chunkCount
+        - category
+
+    KnowledgeSearchInput:
+      type: object
+      properties:
+        query:
+          type: string
+        topK:
+          type: integer
+      required:
+        - query
+
+    KnowledgeChunk:
+      type: object
+      properties:
+        id:
+          type: string
+        source:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        similarityScore:
+          type: number
+        category:
+          type: string
+      required:
+        - id
+        - source
+        - title
+        - content
+        - similarityScore
+        - category

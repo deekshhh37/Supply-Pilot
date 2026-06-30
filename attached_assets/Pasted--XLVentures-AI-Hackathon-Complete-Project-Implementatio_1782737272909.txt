@@ -1,0 +1,532 @@
+# XLVentures.AI Hackathon - Complete Project Implementation Specification
+
+You are an expert full-stack AI engineer.
+
+I already have a Next.js project with a dashboard, components, and initial UI for an Agentic Supply Chain Decision Intelligence Platform.
+
+Your job is to transform it into a production-quality hackathon project.
+
+## DO NOT rewrite the project from scratch.
+
+Instead:
+
+* Analyze the existing project.
+* Preserve the current UI wherever possible.
+* Improve architecture.
+* Add missing functionality.
+* Refactor only when necessary.
+
+The final project should satisfy all the XLVentures.AI hackathon requirements.
+
+---
+
+# Project Theme
+
+SupplyPilot AI
+
+An Agentic Decision Intelligence Platform for Supply Chain Operations.
+
+The platform should determine the Next Best Action for supply chain managers using multiple specialized AI agents.
+
+---
+
+# Core Workflow
+
+User selects or uploads a business scenario.
+
+↓
+
+Planner Agent analyses the request.
+
+↓
+
+Planner dynamically chooses specialized agents.
+
+↓
+
+Agents retrieve structured data and enterprise knowledge.
+
+↓
+
+Agents perform reasoning.
+
+↓
+
+Planner combines outputs.
+
+↓
+
+Recommendation Agent generates ranked Next Best Actions.
+
+↓
+
+Explainability Engine provides reasoning and confidence.
+
+↓
+
+Human approves or rejects.
+
+↓
+
+Memory stores outcome.
+
+---
+
+# Specialized Agents
+
+Implement these agents.
+
+## Planner Agent
+
+Responsibilities:
+
+* Understand user query
+* Identify problem type
+* Decide which agents should execute
+* Orchestrate execution
+* Merge outputs
+
+---
+
+## Inventory Agent
+
+Reads:
+
+* Inventory CSV
+* Warehouse stock
+* Safety stock
+
+Returns:
+
+* Inventory health
+* Shortage risks
+* Overstock risks
+
+---
+
+## Logistics Agent
+
+Reads:
+
+* Shipment data
+* Delivery status
+* Transit delays
+* Route information
+
+Returns:
+
+* Delivery risks
+* ETA analysis
+* Shipping recommendations
+
+---
+
+## Procurement Agent
+
+Reads:
+
+* Supplier information
+* Lead times
+* Purchase orders
+* Vendor reliability
+
+Returns:
+
+* Supplier recommendations
+* Procurement options
+
+---
+
+## Customer Impact Agent
+
+Reads:
+
+* Customer priority
+* SLA
+* Order history
+
+Returns:
+
+* Business impact
+* Customer risk
+
+---
+
+## Weather Risk Agent
+
+Uses weather API.
+
+Checks:
+
+* Storms
+* Heavy rain
+* Port disruptions
+
+Returns:
+
+* Weather impact
+
+---
+
+## Knowledge Retrieval Agent
+
+Searches enterprise documents.
+
+Knowledge base should include:
+
+* Procurement Policy
+* Vendor SLA
+* Shipping SOP
+* Warehouse Manual
+* Escalation Policy
+
+Use vector embeddings for retrieval.
+
+---
+
+## Recommendation Agent
+
+Generates:
+
+* Top 5 Next Best Actions
+
+Each recommendation must include:
+
+* Action
+* Priority
+* Confidence score
+* Supporting evidence
+* Business impact
+
+---
+
+## Memory Agent
+
+Stores:
+
+* Previous incidents
+* Approved actions
+* Vendor performance
+* Historical decisions
+
+Future recommendations should improve using memory.
+
+---
+
+# Business Scenarios
+
+Implement these scenarios.
+
+## Scenario 1
+
+Vendor Delay
+
+Input:
+
+Vendor email saying shipment delayed.
+
+Planner should invoke:
+
+Procurement
+
+Inventory
+
+Customer Impact
+
+Recommendation
+
+Expected recommendations:
+
+Alternative supplier
+
+Split shipment
+
+Notify customer
+
+Escalate vendor
+
+---
+
+## Scenario 2
+
+Inventory Shortage
+
+Planner invokes:
+
+Inventory
+
+Procurement
+
+Recommendation
+
+Recommendations:
+
+Transfer inventory
+
+Emergency procurement
+
+Pause promotions
+
+---
+
+## Scenario 3
+
+Weather Disruption
+
+Planner invokes:
+
+Weather
+
+Logistics
+
+Recommendation
+
+Recommendations:
+
+Reroute shipment
+
+Delay dispatch
+
+Use air freight
+
+---
+
+## Scenario 4
+
+VIP Customer Order
+
+Planner invokes:
+
+Inventory
+
+Customer
+
+Recommendation
+
+Recommendations:
+
+Reserve stock
+
+Prioritize fulfillment
+
+Escalate procurement
+
+---
+
+# Explainability Engine
+
+Every recommendation must explain:
+
+Why this recommendation?
+
+Evidence used
+
+Confidence score
+
+Business impact
+
+Example:
+
+Recommendation:
+
+Switch to Supplier B.
+
+Reason:
+
+Current supplier delayed shipment.
+
+Supplier B has 1-day lead time.
+
+Current inventory lasts only 2 days.
+
+Customer SLA requires delivery within 48 hours.
+
+Confidence:
+
+94%
+
+Evidence:
+
+Inventory Report
+
+Vendor SLA
+
+Shipment Status
+
+Customer Priority
+
+---
+
+# Human in the Loop
+
+Every recommendation should have:
+
+Approve
+
+Reject
+
+Modify
+
+If approved:
+
+Store decision in memory.
+
+If rejected:
+
+Store feedback.
+
+---
+
+# Dashboard
+
+Improve existing dashboard.
+
+Include:
+
+Agent execution timeline
+
+Active agent visualization
+
+Recommendation cards
+
+Confidence scores
+
+Evidence panel
+
+Memory panel
+
+Business impact panel
+
+---
+
+# Data Sources
+
+Use:
+
+Inventory CSV
+
+Orders CSV
+
+Shipment CSV
+
+Warehouse CSV
+
+Supplier CSV
+
+Weather API
+
+Synthetic Emails
+
+Synthetic Purchase Orders
+
+Synthetic Customer Complaints
+
+Enterprise PDFs
+
+---
+
+# RAG
+
+Implement Retrieval Augmented Generation.
+
+Knowledge base:
+
+Policies
+
+SOPs
+
+Contracts
+
+Vendor documents
+
+Manuals
+
+Search these before recommendations.
+
+---
+
+# Tech Stack
+
+Frontend:
+
+Next.js
+
+React
+
+Tailwind
+
+Backend:
+
+Python FastAPI or Next.js API routes
+
+LLM:
+
+OpenAI or Gemini
+
+Embeddings:
+
+Sentence Transformers
+
+Vector DB:
+
+ChromaDB or FAISS
+
+Memory:
+
+SQLite or JSON
+
+---
+
+# Architecture
+
+The architecture must clearly demonstrate:
+
+Planner
+
+Agent Orchestration
+
+Tool Calling
+
+Memory
+
+RAG
+
+Knowledge Retrieval
+
+Reasoning
+
+Human Approval
+
+Explainability
+
+Reusable Agent Framework
+
+---
+
+# Demo Readiness
+
+Ensure the application is polished.
+
+No placeholder text.
+
+No dummy buttons.
+
+All agent execution should be visible.
+
+Recommendations should appear realistic.
+
+Confidence scores should be generated.
+
+Reasoning should be clear.
+
+The project should look like an enterprise AI product rather than a prototype.
+
+---
+
+Before writing any code:
+
+1. Analyze the existing codebase.
+2. Explain what already exists.
+3. Identify missing features.
+4. Produce an implementation plan.
+5. Then implement features incrementally without breaking existing functionality.

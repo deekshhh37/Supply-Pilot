@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "SupplyPilot AI"
+version = "1.0.0"
+id = "artifacts/supply-pilot"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24087
+
+[services.development]
+run = "pnpm --filter @workspace/supply-pilot run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/supply-pilot", "run", "build" ]
+publicDir = "artifacts/supply-pilot/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24087"
+BASE_PATH = "/"

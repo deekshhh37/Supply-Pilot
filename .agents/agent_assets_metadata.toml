@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "8s4rMSOY8AW9w67DgKj7b"
+uri = "file://workspace.tar.gz"
+type = "unspecified"
+title = "SupplyPilot AI — Full Project (workspace.tar.gz)"

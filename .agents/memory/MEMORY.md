@@ -1,0 +1,2 @@
+- [SupplyPilot AI Architecture](supply-pilot-arch.md) — full-stack hackathon app; Express API at /api, React+Vite frontend at /, PostgreSQL DB
+- [TF-IDF RAG Pattern](tfidf-pattern.md) — no LLM used; deterministic TF-IDF cosine similarity for knowledge retrieval, rebuild lib declarations before leaf artifact typecheck

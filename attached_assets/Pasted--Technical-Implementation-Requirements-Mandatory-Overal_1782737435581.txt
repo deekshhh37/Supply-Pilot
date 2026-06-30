@@ -1,0 +1,372 @@
+# Technical Implementation Requirements (Mandatory)
+
+## Overall Architecture
+
+The project must remain a **single Next.js application**.
+
+Do **not** introduce a separate Python backend, FastAPI service, or microservices.
+
+Everything should run through **Next.js API Routes (TypeScript)** and be executable with:
+
+```bash
+npm install
+npm run dev
+```
+
+The entire demo should work locally with a single command.
+
+---
+
+# Runtime
+
+* Next.js
+* React
+* TypeScript
+* Tailwind CSS
+* Next.js API Routes
+* No separate backend server
+* No Docker required
+* Single repository
+* Single runtime
+
+---
+
+# Planner Agent
+
+Implement a real Planner Agent.
+
+The planner should:
+
+* Understand the incoming business scenario
+* Detect the problem type
+* Select only the relevant specialized agents
+* Execute them in sequence
+* Aggregate results
+* Produce a reasoning trace showing why each agent was invoked
+
+The planner must not always invoke every agent.
+
+Example:
+
+Vendor delay
+
+↓
+
+Planner
+
+↓
+
+Inventory Agent
+
+↓
+
+Procurement Agent
+
+↓
+
+Customer Impact Agent
+
+↓
+
+Recommendation Agent
+
+NOT
+
+Planner
+
+↓
+
+Invoke every agent regardless of scenario
+
+---
+
+# Reasoning Engine
+
+Implement a **deterministic, rule-based multi-factor reasoning engine**.
+
+Recommendations should **not** be canned responses.
+
+Every recommendation must be computed using real business signals.
+
+Confidence should be calculated dynamically as a weighted function.
+
+Example signals:
+
+* Inventory days of supply
+* Supplier lead time
+* Customer SLA priority
+* Delivery delay
+* Weather severity
+* Supplier reliability
+* Procurement cost delta
+* Stockout risk
+* Historical vendor performance
+
+Example formula:
+
+Confidence =
+0.25 × Inventory Health +
+0.20 × SLA Urgency +
+0.20 × Supplier Reliability +
+0.15 × Lead Time +
+0.10 × Weather Risk +
+0.10 × Cost Impact
+
+Normalize to 0–100%.
+
+Display every contributing factor in the UI.
+
+---
+
+# Recommendation Generation
+
+Every recommendation must contain:
+
+* Title
+* Description
+* Priority
+* Confidence Score
+* Business Impact
+* Estimated Cost
+* Supporting Evidence
+* Reasoning Trace
+
+Example:
+
+Recommendation
+
+Switch to Supplier B
+
+Priority
+
+Critical
+
+Confidence
+
+94%
+
+Business Impact
+
+Prevents stockout
+
+Estimated Additional Cost
+
++$2,300
+
+Reasoning
+
+Inventory remaining: 2 days
+
+Supplier A lead time: 6 days
+
+Supplier B lead time: 1 day
+
+Customer SLA: Platinum
+
+Weather disruption detected
+
+---
+
+# Retrieval-Augmented Generation (RAG)
+
+Implement a **real retrieval pipeline**.
+
+Do NOT fake retrieval.
+
+Use:
+
+* In-process TF-IDF
+* Cosine Similarity
+* Markdown knowledge base
+* Chunked documents
+
+Knowledge base should include:
+
+* Procurement Policies
+* Vendor SLA
+* Shipping SOP
+* Warehouse Guidelines
+* Escalation Procedures
+* Customer Priority Matrix
+
+Requirements:
+
+* Chunk documents
+* Compute TF-IDF vectors
+* Calculate cosine similarity
+* Retrieve Top-K chunks
+* Show retrieval scores
+
+Display retrieved evidence.
+
+Example:
+
+Evidence
+
+Vendor SLA.md
+
+Similarity: 0.93
+
+Shipping SOP.md
+
+Similarity: 0.89
+
+Warehouse Policy.md
+
+Similarity: 0.84
+
+---
+
+# Explainability
+
+Every recommendation must expose:
+
+Reasoning Trace
+
+Evidence Sources
+
+Similarity Scores
+
+Confidence Breakdown
+
+Business Rule Triggered
+
+This should be visible in an expandable panel.
+
+---
+
+# Memory
+
+Implement persistent memory.
+
+Memory stores:
+
+* Previous incidents
+* Vendor performance
+* Approved recommendations
+* Rejected recommendations
+* Historical confidence
+* Planner decisions
+
+Future recommendations should use this information.
+
+---
+
+# Human in the Loop
+
+Every recommendation should support:
+
+Approve
+
+Reject
+
+Modify
+
+Approval should update memory.
+
+Rejection should store user feedback.
+
+---
+
+# Agent Execution Timeline
+
+Display a live execution timeline.
+
+Planner
+
+↓
+
+Inventory Agent
+
+↓
+
+Knowledge Retrieval
+
+↓
+
+Procurement Agent
+
+↓
+
+Customer Impact Agent
+
+↓
+
+Reasoning Engine
+
+↓
+
+Recommendation Engine
+
+↓
+
+Human Approval
+
+Each step should show:
+
+* Start time
+* End time
+* Execution duration
+* Status
+* Output summary
+
+---
+
+# Data Sources
+
+Use structured datasets for:
+
+* Inventory
+* Shipments
+* Orders
+* Warehouses
+* Suppliers
+
+Use markdown documents for:
+
+* Policies
+* SOPs
+* Contracts
+* Escalation Guides
+
+Use generated enterprise documents for:
+
+* Vendor emails
+* Customer complaints
+* Purchase orders
+* Delay notifications
+
+---
+
+# Code Quality
+
+The codebase should be modular.
+
+Create reusable modules for:
+
+* Planner
+* Agents
+* Knowledge Retrieval
+* Rule Engine
+* Recommendation Engine
+* Memory
+* Utilities
+* Data Loaders
+
+Avoid hardcoded recommendations.
+
+Business logic should be separated from UI.
+
+---
+
+# Final Goal
+
+The final application should demonstrate a genuine Agentic Decision Intelligence Platform where:
+
+* Planner dynamically orchestrates agents
+* Retrieval is real and explainable
+* Reasoning is deterministic and data-driven
+* Confidence scores are computed, not fabricated
+* Recommendations are supported by evidence
+* Human feedback updates memory
+* The entire system runs locally as a single Next.js application with `npm run dev`

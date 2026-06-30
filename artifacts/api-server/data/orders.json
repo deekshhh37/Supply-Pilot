@@ -1,0 +1,54 @@
+[
+  {
+    "orderId": "ORD-8001",
+    "customerId": "CUST-001",
+    "customerName": "MegaManufacturing Corp",
+    "customerTier": "platinum",
+    "orderDate": "2024-01-12",
+    "requiredDelivery": "2024-01-16",
+    "status": "at_risk",
+    "items": [{"itemId": "SKU-003", "quantity": 80, "unitPrice": 45.00}, {"itemId": "SKU-005", "quantity": 60, "unitPrice": 38.00}],
+    "totalValue": 5880,
+    "slaHours": 24,
+    "notes": "Production line shutdown if parts not received by Jan 16"
+  },
+  {
+    "orderId": "ORD-8002",
+    "customerId": "CUST-002",
+    "customerName": "TechEquip Industries",
+    "customerTier": "gold",
+    "orderDate": "2024-01-11",
+    "requiredDelivery": "2024-01-18",
+    "status": "processing",
+    "items": [{"itemId": "SKU-002", "quantity": 20, "unitPrice": 890.00}],
+    "totalValue": 17800,
+    "slaHours": 48,
+    "notes": "Q1 installation project"
+  },
+  {
+    "orderId": "ORD-8003",
+    "customerId": "CUST-003",
+    "customerName": "National Pharma Distribution",
+    "customerTier": "platinum",
+    "orderDate": "2024-01-13",
+    "requiredDelivery": "2024-01-15",
+    "status": "critical",
+    "items": [{"itemId": "SKU-007", "quantity": 50, "unitPrice": 1250.00}],
+    "totalValue": 62500,
+    "slaHours": 24,
+    "notes": "Regulatory compliance requirement — cannot be delayed"
+  },
+  {
+    "orderId": "ORD-8004",
+    "customerId": "CUST-004",
+    "customerName": "BuildRight Contractors",
+    "customerTier": "silver",
+    "orderDate": "2024-01-10",
+    "requiredDelivery": "2024-01-20",
+    "status": "processing",
+    "items": [{"itemId": "SKU-004", "quantity": 200, "unitPrice": 12.50}, {"itemId": "SKU-008", "quantity": 500, "unitPrice": 3.20}],
+    "totalValue": 4100,
+    "slaHours": 72,
+    "notes": null
+  }
+]

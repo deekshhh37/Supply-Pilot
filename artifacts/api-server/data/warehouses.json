@@ -1,0 +1,42 @@
+[
+  {
+    "warehouseId": "WH-001",
+    "name": "Main Distribution Center",
+    "location": "Chicago, IL",
+    "capacityPct": 72,
+    "processingTimeDays": 2,
+    "region": "central"
+  },
+  {
+    "warehouseId": "WH-002",
+    "name": "East Coast Hub",
+    "location": "Newark, NJ",
+    "capacityPct": 58,
+    "processingTimeDays": 1,
+    "region": "northeast"
+  },
+  {
+    "warehouseId": "WH-003",
+    "name": "West Coast Hub",
+    "location": "Los Angeles, CA",
+    "capacityPct": 81,
+    "processingTimeDays": 1,
+    "region": "west"
+  },
+  {
+    "warehouseId": "WH-004",
+    "name": "Southeast Depot",
+    "location": "Atlanta, GA",
+    "capacityPct": 45,
+    "processingTimeDays": 1.5,
+    "region": "southeast"
+  },
+  {
+    "warehouseId": "WH-005",
+    "name": "Central Depot",
+    "location": "Dallas, TX",
+    "capacityPct": 63,
+    "processingTimeDays": 1.5,
+    "region": "south"
+  }
+]
